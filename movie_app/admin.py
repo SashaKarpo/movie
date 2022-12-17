@@ -1,9 +1,11 @@
 from django.contrib import admin, messages
-from .models import Movie
+from .models import Movie, Director
 from django.db.models import QuerySet
 
-
 # Register your models here.
+admin.site.register(Director)
+
+
 class RatingFilter(admin.SimpleListFilter):
     title = 'Фильтр по рейтингу'
     parameter_name = 'rating'
