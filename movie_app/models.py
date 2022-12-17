@@ -14,6 +14,25 @@ class Director(models.Model):
         return f'{self.first_name}  {self.last_name}'
 
 
+class Actor(models.Model):
+    MALE = 'M'
+    FEMALE = 'F'
+    GENDERS = [
+        (MALE, 'Мужчина'),
+        (FEMALE, 'Женщина'),
+    ]
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+
+    gender = models.CharField(max_length=1, choices=GENDERS, default=MALE)
+
+    def __str__(self):
+        if self.gender == self.MALE:
+            return f'Актер {self.first_name} {self.last_name}'
+        else:
+            return f'Актрисса {self.first_name} {self.last_name}'
+
+
 class Movie(models.Model):
     EUR = 'EUR'
     USD = 'USD'
@@ -30,6 +49,8 @@ class Movie(models.Model):
     budget = models.IntegerField(default=1000000, blank=True, validators=[MinValueValidator(1)])
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default=RUB)
     slug = models.SlugField(default='', null=False, db_index=True)
+    director = models.ForeignKey(Director, on_delete=models.CASCADE, null=True)
+    actors = models.ManyToManyField(Actor, )
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
